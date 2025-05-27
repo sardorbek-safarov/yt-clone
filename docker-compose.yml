@@ -1,0 +1,65 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres-password-1234
+      POSTGRES_DB: yt-clone
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    container_name: nest-backend
+    ports:
+      - "8080:8080"
+    restart: always
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/uploads:/app/uploads
+    depends_on:
+      - postgres
+    develop:
+      watch:
+        # Watch for changes in source code and sync them
+        - action: sync
+          path: ./backend/src
+          target: /app/src
+          ignore:
+            - node_modules/
+        # Watch for package.json changes and rebuild
+        - action: rebuild
+          path: ./backend/package.json
+        # Watch for Dockerfile changes and rebuild
+        - action: rebuild
+          path: ./backend/Dockerfile
+        # Watch for other config files and restart
+        - action: restart
+          path: ./backend/.env
+        - action: restart
+          path: ./backend/tsconfig.json
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./backend/uploads:/uploads:ro
+    depends_on:
+      - backend
+    develop:
+      watch:
+        # Watch for nginx config changes and restart
+        - action: restart
+          path: ./nginx/default.conf
+
+volumes:
+  pgdata:
