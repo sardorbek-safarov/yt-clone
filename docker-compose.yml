@@ -3,10 +3,13 @@ services:
     image: postgres:16
     container_name: postgres
     restart: always
+    env_file:
+      - ./backend/.env    
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres-password-1234
-      POSTGRES_DB: yt-clone
+     POSTGRES_USER: ${DB_USER}
+     POSTGRES_PASSWORD: ${DB_PASSWORD}
+     POSTGRES_DB: ${DB_NAME}
+
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:

@@ -1,9 +1,9 @@
 # Run docker commands
-up: ../docker-compose.yml .env
+up: 
 	docker compose up -d
-build: ../docker-compose.yml .env
+build: 
 	docker compose build
-down: ../docker-compose.yml .env
+down: 
 	docker compose down
 
 # Makefile for common Prisma and NestJS commands
