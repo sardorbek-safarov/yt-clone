@@ -13,7 +13,9 @@ services:
       - "5432:5432"
 
   backend:
-    build: ./backend
+    build: 
+      context: ./backend
+      dockerfile: ./Dockerfile.dev
     container_name: nest-backend
     ports:
       - "8080:8080"
@@ -22,28 +24,11 @@ services:
       - ./backend/.env
     volumes:
       - ./backend/uploads:/app/uploads
+      - ./backend/prisma:/app/prisma   
+      - ./backend/src:/app/src  
+      - /app/node_modules   
     depends_on:
       - postgres
-    develop:
-      watch:
-        # Watch for changes in source code and sync them
-        - action: sync
-          path: ./backend/src
-          target: /app/src
-          ignore:
-            - node_modules/
-        # Watch for package.json changes and rebuild
-        - action: rebuild
-          path: ./backend/package.json
-        # Watch for Dockerfile changes and rebuild
-        - action: rebuild
-          path: ./backend/Dockerfile
-        # Watch for other config files and restart
-        - action: restart
-          path: ./backend/.env
-        - action: restart
-          path: ./backend/tsconfig.json
-
   nginx:
     image: nginx:alpine
     container_name: nginx
