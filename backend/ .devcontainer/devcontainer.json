@@ -1,0 +1,16 @@
+{
+  "name": "NestJS + Prisma Dev Container",
+  "dockerComposeFile": "../../docker-compose.yml",
+  "service": "backend",
+  "workspaceFolder": "/app",
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+  "extensions": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "Prisma.prisma",
+    "ms-azuretools.vscode-docker"
+  ],
+  "postCreateCommand": "npm install"
+}
