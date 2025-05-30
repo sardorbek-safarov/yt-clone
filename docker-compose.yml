@@ -27,11 +27,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./backend/uploads:/app/uploads
-      - ./backend/prisma:/app/prisma   
-      - ./backend/generated:/app/generated
-      - ./backend/src:/app/src  
-      - /app/node_modules   
+      - ./backend:/app
     depends_on:
       - postgres
     networks:
